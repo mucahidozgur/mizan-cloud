@@ -1,17 +1,17 @@
 # Mizan Cloud
 
-Avukatlar için AI doküman asistanı — cloud versiyonu.
+Avukatlar için AI doküman asistanı — cloud versiyonu (tamamen ücretsiz yığın).
 
-Frontend: Vercel | Backend: Railway | DB: Postgres+pgvector | LLM: Groq
+Frontend: Vercel | Backend: Render (free) | DB: Neon (Postgres+pgvector) | Embedding: Cloudflare Workers AI | LLM: Groq
 
 ## Yapı
 
 ```
 mizan-cloud/
-├── backend/      # FastAPI + LangGraph RAG (Railway'e deploy)
-├── frontend/     # Next.js (Vercel'e deploy)
+├── backend/      # FastAPI + LangGraph RAG (Render'a deploy)
+├── frontend/     # Next.js (Vercel'e deploy, keepalive cron'u dahil)
 ├── scripts/      # seed_data.py (avukat dokümanları için uyarlanacak)
-├── railway.json  # Railway deploy konfigürasyonu
+├── render.yaml   # Render Blueprint (backend deploy konfigürasyonu)
 └── .env.example  # Ortam değişkenleri şablonu
 ```
 
@@ -19,6 +19,7 @@ mizan-cloud/
 
 ```bash
 # Backend (backend/ dizininde, .env ile)
+# EMBEDDING_PROVIDER=local için sentence-transformers gerekir (requirements.txt yorum satırları)
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 
@@ -29,5 +30,8 @@ npm run dev   # NEXT_PUBLIC_API_URL yoksa http://localhost:8000 kullanılır
 
 ## Deploy
 
-- **Railway**: kök dizinde `railway.json` ile Dockerfile build; `DATABASE_URL` ve `GROQ_API_KEY` Railway'de env olarak tanımlanır.
-- **Vercel**: `frontend/` dizini root olarak bağlanır; `NEXT_PUBLIC_API_URL=https://mizan-api.up.railway.app` build sırasında `.env.production.local`'dan okunur.
+- **Render (backend)**: Dashboard → New → Blueprint → `mizan-cloud` reposu → Apply.
+  Sırlar (`DATABASE_URL`, `GROQ_API_KEY`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`) Dashboard'da girilir.
+- **Neon (DB)**: Free tier, pgvector hazır. İlk deploy'dan sonra lokalden `alembic upgrade head` çalıştırılır.
+- **Vercel (frontend)**: `frontend/` root olarak bağlanır; `NEXT_PUBLIC_API_URL=https://mizan-backend.onrender.com`.
+  `vercel.json` içindeki cron (`/api/keepalive`, 10 dk'da bir) Render'ın uyumasını engeller.

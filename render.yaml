@@ -1,0 +1,40 @@
+# Render Blueprint: backend'i Docker ile ücretsiz (free) instance'a deploy eder.
+# Dashboard: New → Blueprint → mizan-cloud reposu → Apply.
+services:
+  - type: web
+    name: mizan-backend
+    runtime: docker
+    dockerContext: ./backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: EMBEDDING_PROVIDER
+        value: cloudflare
+      - key: EMBEDDING_MODEL
+        value: BAAI/bge-small-en-v1.5
+      - key: CLOUDFLARE_EMBEDDING_MODEL
+        value: "@cf/baai/bge-small-en-v1.5"
+      - key: EMBEDDING_DIM
+        value: "384"
+      - key: LLM_MODEL
+        value: qwen/qwen3.8-27b
+      - key: GROQ_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: JWT_ALG
+        value: HS256
+      - key: JWT_EXPIRE_MIN
+        value: "1440"
+      - key: CORS_ORIGINS
+        value: '["http://localhost:3000","https://mizan.vercel.app","https://mizan-*.vercel.app"]'
+      - key: JWT_SECRET
+        generateValue: true
+      # Sırlar: Dashboard'da elle girilir (git'e ASLA yazılmaz)
+      - key: DATABASE_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CLOUDFLARE_ACCOUNT_ID
+        sync: false
+      - key: CLOUDFLARE_API_TOKEN
+        sync: false
