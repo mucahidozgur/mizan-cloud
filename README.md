@@ -34,6 +34,7 @@ npm run dev   # NEXT_PUBLIC_API_URL yoksa http://localhost:8000 kullanılır
   Sırlar (`DATABASE_URL`, `GROQ_API_KEY`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`) Dashboard'da girilir.
 - **Neon (DB)**: Free tier, pgvector hazır. İlk deploy'dan sonra lokalden `alembic upgrade head` çalıştırılır.
 - **Vercel (frontend)**: `frontend/` root olarak bağlanır; `NEXT_PUBLIC_API_URL=https://mizan-backend-rtl5.onrender.com`.
-  `vercel.json` içindeki cron (`/api/keepalive`, 10 dk'da bir) Render'ın uyumasını engeller.
+  Render'ın uyumamasını `.github/workflows/keepalive.yml` sağlar (her 10 dk'da bir `/health` ping'i).
+  Vercel cron'u kullanılmıyor: Hobby planı cron'ları günde 1 ile sınırlıyor.
 
 # Not: keepalive GitHub Actions cronu (keepalive.yml) best-effort calisir; gecikmeler olabilir.
