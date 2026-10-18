@@ -43,7 +43,7 @@ class ChatRequest(BaseModel):
 
     query: str = Field(min_length=1, max_length=2000)
     document_ids: list[UUID] | None = None
-    top_k: int = Field(default=5, ge=1, le=10)
+    top_k: int = Field(default=8, ge=1, le=10)
 
 
 class ChatSource(BaseModel):

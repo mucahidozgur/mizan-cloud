@@ -28,7 +28,7 @@ class ChatService:
         self,
         query: str,
         document_ids: list[UUID] | None = None,
-        top_k: int = 5,
+        top_k: int = 8,
     ) -> AsyncIterator[dict[str, object]]:
         """SSE event dict'leri üretir: sources, token, done, error."""
         try:
