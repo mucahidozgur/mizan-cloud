@@ -35,3 +35,5 @@ npm run dev   # NEXT_PUBLIC_API_URL yoksa http://localhost:8000 kullanılır
 - **Neon (DB)**: Free tier, pgvector hazır. İlk deploy'dan sonra lokalden `alembic upgrade head` çalıştırılır.
 - **Vercel (frontend)**: `frontend/` root olarak bağlanır; `NEXT_PUBLIC_API_URL=https://mizan-backend-rtl5.onrender.com`.
   `vercel.json` içindeki cron (`/api/keepalive`, 10 dk'da bir) Render'ın uyumasını engeller.
+
+# Not: keepalive GitHub Actions cronu (keepalive.yml) best-effort calisir; gecikmeler olabilir.
