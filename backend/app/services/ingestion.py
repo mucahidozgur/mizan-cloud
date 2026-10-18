@@ -29,7 +29,11 @@ class DocumentIngestionService:
 
         chunks = chunk_text(doc.content)
         if chunks:
-            embeddings = self.embeddings.embed_documents(chunks)
+            # Embedding girişine doküman başlığı eklenir: "X sözleşmesi" sorguları
+            # dokümanın TÜM chunk'larını yukarı çeker (başlıksız clause chunk'ları
+            # başlık chunk'larının gölgesinde kalıyordu). DB'de saf içerik saklanır.
+            embed_inputs = [f"{doc.title}\n{content}" for content in chunks]
+            embeddings = self.embeddings.embed_documents(embed_inputs)
             self.db.add_all(
                 [
                     Chunk(
