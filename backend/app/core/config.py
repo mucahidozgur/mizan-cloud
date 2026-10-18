@@ -24,8 +24,8 @@ class Settings(BaseSettings):
     JWT_EXPIRE_MIN: int = 60
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",
-        "https://mizan.vercel.app",
-        "https://mizan-*.vercel.app",  # Vercel preview/şube deployment'ları
+        "https://mizan-cloud.vercel.app",
+        "https://mizan-cloud-*.vercel.app",  # Vercel preview/şube deployment'ları
     ]
     TEST_DATABASE_URL: str | None = None  # host'tan test DB'si (localhost)
     TEST_DATABASE_URL_DOCKER: str | None = None  # container içinden test DB'si (postgres)
