@@ -51,7 +51,7 @@ export default function AssistantPage() {
       const path = mode === "chat" ? "/api/ai/chat" : "/api/ai/agent";
       const body = {
         query,
-        top_k: 5,
+        top_k: 8,
         document_ids: selectedIds.length > 0 ? selectedIds : undefined,
       };
       for await (const ev of streamSSE(path, body)) {
