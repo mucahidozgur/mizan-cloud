@@ -1,7 +1,8 @@
 name: Keep Backend Awake
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    # :00/:10 gibi saat baslarindan kacinir (GitHub cron'larinda en yogun slotlar)
+    - cron: '3-53/10 * * * *'
   workflow_dispatch:
 jobs:
   ping:
