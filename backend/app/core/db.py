@@ -13,7 +13,14 @@ logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
-engine = create_async_engine(settings.DATABASE_URL, echo=False)
+# pool_pre_ping: Neon (serverless) 5 dk boşta kalınca bağlantıları kapatır;
+# ilk istekte "connection is closed" 500'ü olmaması için checkout'ta canlılık kontrolü.
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,
+    pool_pre_ping=True,
+    pool_recycle=300,
+)
 
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
