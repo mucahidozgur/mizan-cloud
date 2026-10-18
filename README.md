@@ -33,5 +33,5 @@ npm run dev   # NEXT_PUBLIC_API_URL yoksa http://localhost:8000 kullanılır
 - **Render (backend)**: Dashboard → New → Blueprint → `mizan-cloud` reposu → Apply.
   Sırlar (`DATABASE_URL`, `GROQ_API_KEY`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`) Dashboard'da girilir.
 - **Neon (DB)**: Free tier, pgvector hazır. İlk deploy'dan sonra lokalden `alembic upgrade head` çalıştırılır.
-- **Vercel (frontend)**: `frontend/` root olarak bağlanır; `NEXT_PUBLIC_API_URL=https://mizan-backend.onrender.com`.
+- **Vercel (frontend)**: `frontend/` root olarak bağlanır; `NEXT_PUBLIC_API_URL=https://mizan-backend-rtl5.onrender.com`.
   `vercel.json` içindeki cron (`/api/keepalive`, 10 dk'da bir) Render'ın uyumasını engeller.

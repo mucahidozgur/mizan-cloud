@@ -8,7 +8,7 @@ export async function GET() {
   const backend =
     process.env.BACKEND_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
-    "https://mizan-backend.onrender.com";
+    "https://mizan-backend-rtl5.onrender.com";
   try {
     const res = await fetch(`${backend}/health`, { cache: "no-store" });
     return NextResponse.json({ ok: res.ok, status: res.status });
