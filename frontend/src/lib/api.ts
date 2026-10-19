@@ -24,7 +24,16 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${API_URL}${path}`, { ...options, headers });
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}${path}`, { ...options, headers });
+  } catch {
+    // Ağ hatası (sunucu uyanıyor, bağlantı koptu vb.) — tarayıcı "Failed to fetch" der.
+    throw new ApiError(
+      "Sunucuya ulaşılamadı. Sunucu uyanıyor olabilir — birkaç saniye sonra tekrar deneyin.",
+      0
+    );
+  }
   if (res.status === 401) {
     clearToken();
     if (typeof window !== "undefined") {

@@ -52,9 +52,12 @@ async def upload_document(
         raise HTTPException(status_code=413, detail="PDF en fazla 10 MB olabilir")
     try:
         reader = PdfReader(BytesIO(data))
-        text = "\n\n".join(page.extract_text() or "" for page in reader.pages).strip()
+        raw_text = "\n\n".join(page.extract_text() or "" for page in reader.pages)
     except Exception:
         raise HTTPException(status_code=400, detail="PDF okunamadı veya bozuk dosya")
+    # Bazı PDF'lerden (özellikle özel font kodlamalı Türkçe dosyalar) geçersiz
+    # byte dizileri çıkar; Postgres UTF-8'e aykırı byte'ları reddeder (500 olur).
+    text = raw_text.encode("utf-8", errors="replace").decode("utf-8").replace("\x00", "").strip()
     if not text:
         raise HTTPException(
             status_code=400,
