@@ -1,9 +1,11 @@
 """Document CRUD endpoint'leri."""
 
+from io import BytesIO
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from pypdf import PdfReader
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
@@ -32,6 +34,37 @@ async def create_document(body: DocumentCreate, db: DbDep, current_user: UserDep
     """Yeni doküman oluşturur."""
     service = DocumentService(db, UUID(current_user.id))
     return await service.create(body)
+
+
+MAX_PDF_BYTES = 10 * 1024 * 1024  # 10 MB
+
+
+@router.post("/upload", response_model=DocumentRead, status_code=201)
+async def upload_document(
+    file: Annotated[UploadFile, File()],
+    db: DbDep,
+    current_user: UserDep,
+    title: Annotated[str | None, Form()] = None,
+) -> Document:
+    """PDF yükler, metnini çıkarır ve doküman oluşturur (source=pdf)."""
+    data = await file.read()
+    if len(data) > MAX_PDF_BYTES:
+        raise HTTPException(status_code=413, detail="PDF en fazla 10 MB olabilir")
+    try:
+        reader = PdfReader(BytesIO(data))
+        text = "\n\n".join(page.extract_text() or "" for page in reader.pages).strip()
+    except Exception:
+        raise HTTPException(status_code=400, detail="PDF okunamadı veya bozuk dosya")
+    if not text:
+        raise HTTPException(
+            status_code=400,
+            detail="PDF'ten metin çıkarılamadı (taranmış/görüntü PDF olabilir — metni kopyalayarak ekleyin)",
+        )
+    doc_title = (title or "").strip()[:255] or (file.filename or "Yüklenen PDF")[:255]
+    service = DocumentService(db, UUID(current_user.id))
+    return await service.create(
+        DocumentCreate(title=doc_title, content=text[:2000000], source="pdf")
+    )
 
 
 @router.get("", response_model=DocumentListResponse)

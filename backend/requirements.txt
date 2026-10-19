@@ -9,6 +9,7 @@ alembic==1.14.1
 pydantic==2.9.0
 pydantic-settings==2.15.0
 python-multipart==0.0.9
+pypdf==6.21.1
 sse-starlette==3.0.3
 langgraph==1.2.12
 langchain==1.4.3

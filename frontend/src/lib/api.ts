@@ -16,7 +16,8 @@ export class ApiError extends Error {
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    // FormData'da Content-Type verilmez: tarayıcı multipart sınırını kendi ekler.
+    ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
     ...(options.headers as Record<string, string> | undefined),
   };
   if (token) {
@@ -147,6 +148,18 @@ export const api = {
     return apiFetch<Document>("/api/documents", {
       method: "POST",
       body: JSON.stringify(data),
+    });
+  },
+
+  uploadDocument(file: File, title?: string): Promise<Document> {
+    const form = new FormData();
+    form.append("file", file);
+    if (title) {
+      form.append("title", title);
+    }
+    return apiFetch<Document>("/api/documents/upload", {
+      method: "POST",
+      body: form,
     });
   },
 
