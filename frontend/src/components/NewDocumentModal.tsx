@@ -97,7 +97,7 @@ export default function NewDocumentModal({ onClose, onCreated }: NewDocumentModa
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
               />
               <p className="mt-1 text-xs text-gray-500">
-                Başlık boş bırakılırsa dosya adı kullanılır. Taranmış (görüntü) PDF'lerden
+                Başlık boş bırakılırsa dosya adı kullanılır. Taranmış (görüntü) PDF&apos;lerden
                 metin çıkarılamaz.
               </p>
               <input
